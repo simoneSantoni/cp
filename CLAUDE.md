@@ -14,10 +14,23 @@ CorePeriphery.jl is a Julia package implementing algorithms for detecting core-p
 julia --project=. -e 'using Pkg; Pkg.test()'
 ```
 
-### Running Examples
+### Running a Single Testset
+
+No built-in filter; activate the project and run specific testsets interactively:
 
 ```julia
-include("examples/basic_usage.jl")
+julia --project=. -e '
+using CorePeriphery, Test, LinearAlgebra, Statistics, Random
+# paste or include the @testset block you want to run
+'
+```
+
+Or load the full test file in the REPL and comment out unwanted testsets.
+
+### Running Examples
+
+```bash
+julia --project=. examples/basic_usage.jl
 ```
 
 ### Building Documentation
@@ -29,14 +42,18 @@ julia --project=docs docs/make.jl
 ### Interactive Development
 
 ```julia
-using Pkg
-Pkg.activate(".")
+julia --project=.
+# then:
 using CorePeriphery
 ```
 
+## CI
+
+GitHub Actions ([.github/workflows/CI.yml](.github/workflows/CI.yml)) runs tests on Julia 1.6, latest stable, and nightly. Docs are built and deployed to GitHub Pages on pushes to main.
+
 ## Architecture
 
-The package is implemented as a single module in [src/CorePeriphery.jl](src/CorePeriphery.jl) (~1200 lines) with no external dependencies beyond Julia's standard library (LinearAlgebra, Statistics, Random).
+The package is implemented as a single module in [src/CorePeriphery.jl](src/CorePeriphery.jl) (~1200 lines) with no external dependencies beyond Julia's standard library (LinearAlgebra, Statistics, Random). The `algo/` directory contains reference papers for each algorithm.
 
 ### Result Types
 
@@ -58,20 +75,20 @@ The package is implemented as a single module in [src/CorePeriphery.jl](src/Core
 
 ### Algorithms (10 total)
 
-All algorithms accept an adjacency matrix `A::Matrix{Float64}`:
+All algorithms accept an adjacency matrix `A::Matrix{Float64}`. Line ranges are for [src/CorePeriphery.jl](src/CorePeriphery.jl):
 
-| Algorithm | Function | Type | Key Parameters |
-|-----------|----------|------|----------------|
-| Borgatti-Everett Continuous | `borgatti_everett_continuous(A)` | Continuous | `max_iter`, `tol`, `init` |
-| Borgatti-Everett Discrete | `borgatti_everett_discrete(A)` | Discrete | `max_iter`, `init` |
-| Lip's Fast Discrete | `lip_discrete(A)` | Discrete | `max_iter` |
-| Rombach Generalized | `rombach_continuous(A)` | Continuous | `alpha`, `beta`, `n_runs` |
-| Spectral Method | `spectral_method(A)` | Continuous | None |
-| Random Walker Profiling | `random_walker_profiling(A)` | Continuous | `n_walks`, `walk_length` |
-| MINRES/SVD | `minres_svd(A)` | Continuous | `max_iter`, `tol` |
-| Multiple CP Pairs | `multiple_cp_pairs(A)` | Multi-pair | `max_pairs`, `min_pair_size` |
-| Surprise-Based | `surprise_cp(A)` | Discrete | `max_iter` |
-| Label Switching | `label_switching_cp(A)` | Discrete | `max_iter` |
+| Algorithm | Function | Type | Lines |
+|-----------|----------|------|-------|
+| Borgatti-Everett Continuous | `borgatti_everett_continuous(A)` | Continuous | 200-272 |
+| Borgatti-Everett Discrete | `borgatti_everett_discrete(A)` | Discrete | 273-336 |
+| Lip's Fast Discrete | `lip_discrete(A)` | Discrete | 337-442 |
+| Rombach Generalized | `rombach_continuous(A)` | Continuous | 443-564 |
+| Spectral Method | `spectral_method(A)` | Continuous | 565-612 |
+| Random Walker Profiling | `random_walker_profiling(A)` | Continuous | 613-683 |
+| MINRES/SVD | `minres_svd(A)` | Continuous | 727-827 |
+| Multiple CP Pairs | `multiple_cp_pairs(A)` | Multi-pair | 828-961 |
+| Surprise-Based | `surprise_cp(A)` | Discrete | 962-1082 |
+| Label Switching | `label_switching_cp(A)` | Discrete | 1083-1198 |
 
 **Algorithm Selection Guide:**
 

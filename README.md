@@ -95,7 +95,7 @@ Fast greedy algorithm with efficient O(n) updates per iteration for discrete CP 
 ```julia
 using CorePeriphery
 
-# Create adjacency matrix from edge list
+# Create adjaCency matrix from edge list
 edges = [
     (1, 2), (1, 3), (1, 4), (1, 5),
     (2, 3), (2, 4), (2, 5),
